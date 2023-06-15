@@ -22,7 +22,7 @@ print(resultats_elections_06_44_2022)
 #Lire le fichier sécurité
 donnes_securite_dept = pd.read_csv("../donnee-dep-data.gouv-2022-geographie2022-produit-le2023-02-09(1).csv", sep=';')
 #Filtrer les données de sécurité sur l'année 2022 et sur les départements 44 et 06
-donnees_securite_2022_44_06 = donnes_securite_dept[(donnes_securite_dept['annee'] == 22) & ((donnes_securite_dept['Code.département'] == '06')|(donnes_securite_dept['Code.département'] == '44'))]
+donnees_securite_2022_44_06 = donnes_securite_dept[(donnes_securite_dept['annee'] == 22) & ((donnes_securite_dept['Code.département'] == '6')|(donnes_securite_dept['Code.département'] == '06')|(donnes_securite_dept['Code.département'] == '44'))]
 
 nb_faits_par_departements = donnees_securite_2022_44_06.groupby('Code.département').sum()['faits']
 
