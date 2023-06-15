@@ -66,5 +66,13 @@ if valeurs_trimestrielles_series_emploi is not None:
     donnees_emploi_44_06 = pd.merge(indicateurs_serie_emploi_44_06, valeurs_trimestrielles_series_emploi, how='inner',
                                     on="idBank")
     print("Données emploi mergées : \n", donnees_emploi_44_06)
-    afficher_noms_colonnes_avec_valeurs_manquantes(donnees_emploi_44_06)
-    colonnes_interessantes = ["2007-T2","2012-T2","2017-T2","2022-T2"]
+    
+    noms_colonnes_interessantes = ["2007-T2","2012-T2","2017-T2","2022-T2"]
+    for nom_colonne in noms_colonnes_interessantes:
+        print(nom_colonne, " ", str((donnees_emploi_44_06[nom_colonne].isna().sum() / len(donnees_emploi_44_06) )* 100), "% de données manquantes")
+    lignes_donnees_manquantes = donnees_emploi_44_06[
+    (donnees_emploi_44_06["2007-T2"].isnull())|
+    (donnees_emploi_44_06["2012-T2"].isnull())|
+    (donnees_emploi_44_06["2017-T2"].isnull())|
+    (donnees_emploi_44_06["2022-T2"].isnull())]
+    print(lignes_donnees_manquantes[["idBank", "Dernière mise à jour_x"] + noms_colonnes_interessantes])
