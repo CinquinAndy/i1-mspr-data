@@ -16,7 +16,11 @@ def separer_numero_departement(valeur):
     else:
         numero_departement = tableau_composants_valeur[0].strip()
         return numero_departement
-
+def afficher_noms_colonnes_avec_valeurs_manquantes(dataframe):
+  column_labels = list(dataframe.columns)
+  for column_label in column_labels:
+    if dataframe[column_label].hasnans:
+      print(column_label)
 
 # Lire les fichier des données des élections 2022 dans les Alpes_Maritimes et la Loire-Atlantique
 #Lire les données des autres élections :
@@ -58,14 +62,9 @@ if valeurs_trimestrielles_series_emploi is not None:
     # Suppression des lignes avec les codes statistiques
     valeurs_trimestrielles_series_emploi = valeurs_trimestrielles_series_emploi.drop(codes_stats.index)
     print(valeurs_trimestrielles_series_emploi)
-
-
-    print("valeur a merge : \n")
-
-
-    print(indicateurs_serie_emploi_44_06["idBank"].unique())
-    print(valeurs_trimestrielles_series_emploi["idBank"].unique())
-
+    indicateurs_serie_emploi_44_06["idBank"] = indicateurs_serie_emploi_44_06["idBank"].apply(lambda id: id.lstrip('0'))
     donnees_emploi_44_06 = pd.merge(indicateurs_serie_emploi_44_06, valeurs_trimestrielles_series_emploi, how='inner',
                                     on="idBank")
-    print("Données mergées : \n", donnees_emploi_44_06)
+    print("Données emploi mergées : \n", donnees_emploi_44_06)
+    afficher_noms_colonnes_avec_valeurs_manquantes(donnees_emploi_44_06)
+    colonnes_interessantes = ["2007-T2","2012-T2","2017-T2","2022-T2"]
