@@ -7,40 +7,29 @@
 
 import pandas as pd
 import numpy as np
-import sklearn as sk
-import logging
-import re
-import sqlite3
-#Définition de constantes
-AXE_COLONNES = 1
+
 
 def separer_numero_departement(valeur):
-    valeur_a_comparer = valeur.strip().lower()
-    if valeur_a_comparer == "loire atlantique":
-       return 44
-    elif valeur_a_comparer == "alpes-maritimes":
-       return 6
-def afficher_noms_colonnes_avec_valeurs_manquantes(dataframe):
-  column_labels = list(dataframe.columns)
-  for column_label in column_labels:
-    if dataframe[column_label].hasnans:
-      print(column_label)
-def extraire_secteur_activite(label):
-    try:
-        secteur_activite = re.sub("\(.*?\)", "",label).split("-")[1].strip()
-        return secteur_activite
-    except Exception as err:
-        logging.warning("Problème avec le libellé " + label + "\n" + err +" \n La valeur a été laissée telle quelle. \n Un traitement manuel de la valeur sera nécessaire.")
-        return label
+    tableau_composants_valeur = str(valeur).split("-", maxsplit=1)
+    if len(tableau_composants_valeur) < 2:
+        return None
+    else:
+        numero_departement = tableau_composants_valeur[0].strip()
+        return numero_departement
+
 
 # Lire les fichier des données des élections 2022 dans les Alpes_Maritimes et la Loire-Atlantique
-#Lire les données des autres élections :
-#resultats_elections_06_44_2017 = pd.read_excel('Presidentielle_2017_Resultats_Tour_1_c.xls', sheet_name="Départements Tour 1")
-#resultats_elections_06_44_2012 = pd.read_excel('Presidentielle_2012_Tour_1.xls', sheet_name="Départements T1")
-#resultats_elections_06_44_2007 = pd.read_excel('Presidentielle_2007_Tour_1.xls', sheet_name="Départements T1")
 resultats_elections_06_44_2022 = pd.read_excel('./data/Donnees_choisies_2022.xlsx')
 # Affiche le dataframe
-#print(resultats_elections_06_44_2022)
+print(resultats_elections_06_44_2022)
+
+# Lire le fichier sécurité
+donnes_securite_dept = pd.read_csv("./data/donnee-securité.csv",
+                                   sep=';')
+# Filtrer les données de sécurité sur l'année 2022 et sur les départements 44 et 06
+donnees_securite_2022_44_06 = donnes_securite_dept[(donnes_securite_dept['annee'] == 22) & (
+            (donnes_securite_dept['Code.département'] == '6') | (donnes_securite_dept['Code.département'] == '06') | (
+                donnes_securite_dept['Code.département'] == '44'))]
 
 # Lire le fichier sécurité
 donnes_securite_dept = pd.read_csv("./data/donnee-securité.csv",
@@ -56,23 +45,31 @@ resultats_elections_06_44_2022['faits_de_violence'] = nb_faits_par_departements.
 #print(resultats_elections_06_44_2022)
 
 # Traite les données sur l'emploi
-#Lit le jeu de données de l'insee au niveau de l'emloi et du chômage
-sheet_names = ['Emploi LA', 'Emploi Indus LA', 'Tertiaire marchand LA', 'Tertiaire non march LA', 'Chom LA', 'Emploi AM', 'Emploi Indus AM', 'Tertiaire march AM', 'Tertiaire non march AM OK', 'Chom AM']
-dict_donnees_insee = pd.read_excel("./data/donnees_insee.xlsx", sheet_name=sheet_names, skiprows=6)
-dict_donnees_insee['Tertiaire non march AM OK'] = dict_donnees_insee['Tertiaire non march AM OK'].drop(33, axis=0)
-print(dict_donnees_insee.keys())
+indicateurs_serie_emploi = pd.read_csv("./data/caractéristiques.csv", sep=";")
+print(indicateurs_serie_emploi)
+indicateurs_serie_emploi["N° Département"] = indicateurs_serie_emploi["Zone géographique"].apply(
+    separer_numero_departement)
+print(indicateurs_serie_emploi)
+indicateurs_serie_emploi_44_06 = indicateurs_serie_emploi[
+    (indicateurs_serie_emploi['N° Département'] == '44') | (indicateurs_serie_emploi['N° Département'] == '06')]
 
-for item in dict_donnees_insee.items():
-   dataframe = dict_donnees_insee[item[0]]
-   dataframe = dataframe.dropna(axis=0, how="all")
-   print(dataframe)
-   dict_donnees_insee[item[0]] = dataframe
-   #print(item[0], str(dict_donnees_insee[item[0]].shape))
-dataframes = dict_donnees_insee.values()
-dataset_insee = pd.concat(dataframes, axis=0,keys=sheet_names).reset_index(level=1,drop=True)
-dataset_insee.insert(0,"N°_Departement",dataset_insee["Zone_geographique"].apply(separer_numero_departement))
-dataset_insee = dataset_insee.drop("Zone_geographique", axis=AXE_COLONNES)
-print(dataset_insee)
+valeurs_trimestrielles_series_emploi = pd.read_csv("./data/valeurs_trimestrielles.csv", sep=";",
+                                                   dtype={'idBank': object})
+if valeurs_trimestrielles_series_emploi is not None:
+    # Sauvegarde des codes statistiques de chaque série
+    codes_stats = valeurs_trimestrielles_series_emploi[valeurs_trimestrielles_series_emploi["Libellé"] == "Codes"]
+    print(codes_stats)
+    # Suppression des lignes avec les codes statistiques
+    valeurs_trimestrielles_series_emploi = valeurs_trimestrielles_series_emploi.drop(codes_stats.index)
+    print(valeurs_trimestrielles_series_emploi)
 
-#Insertion des données dans une base de données
-connexion_donnees_emploi = sqlite3.connect("Emploi4406.db")
+
+    print("valeur a merge : \n")
+
+
+    print(indicateurs_serie_emploi_44_06["idBank"].unique())
+    print(valeurs_trimestrielles_series_emploi["idBank"].unique())
+
+    donnees_emploi_44_06 = pd.merge(indicateurs_serie_emploi_44_06, valeurs_trimestrielles_series_emploi, how='inner',
+                                    on="idBank")
+    print("Données mergées : \n", donnees_emploi_44_06)
