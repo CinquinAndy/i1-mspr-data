@@ -16,6 +16,10 @@ def separer_numero_departement(valeur):
         return numero_departement
 #Lire les fichier des données des élections 2022 dans les Alpes_Maritimes et la Loire-Atlantique
 resultats_elections_06_44_2022 = pd.read_excel('Donnees_choisies_2022.xlsx')
+#Lire les données des autres élections :
+#resultats_elections_06_44_2017 = pd.read_excel('Presidentielle_2017_Resultats_Tour_1_c.xls', sheet_name="Départements Tour 1")
+#resultats_elections_06_44_2012 = pd.read_excel('Presidentielle_2012_Tour_1.xls', sheet_name="Départements T1")
+#resultats_elections_06_44_2007 = pd.read_excel('Presidentielle_2007_Tour_1.xls', sheet_name="Départements T1")
 #Affiche le dataframe
 print(resultats_elections_06_44_2022)
 
