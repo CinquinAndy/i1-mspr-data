@@ -76,3 +76,6 @@ if valeurs_trimestrielles_series_emploi is not None:
     (donnees_emploi_44_06["2017-T2"].isnull())|
     (donnees_emploi_44_06["2022-T2"].isnull())]
     print(lignes_donnees_manquantes[["idBank", "Dernière mise à jour_x"] + noms_colonnes_interessantes])
+    #Export Excel du dataframe
+    with pd.ExcelWriter("./data/donnees_emploi_44_06.xlsx",engine="openpyxl",mode='w') as writer:
+        donnees_emploi_44_06.to_excel(writer, sheet_name="Emploi_44_06")
