@@ -7,7 +7,11 @@
 
 import pandas as pd
 import numpy as np
-
+import sklearn as sk
+import logging
+import re
+#Définition de constantes
+AXE_COLONNES = 1
 
 def separer_numero_departement(valeur):
     tableau_composants_valeur = str(valeur).split("-", maxsplit=1)
@@ -21,6 +25,13 @@ def afficher_noms_colonnes_avec_valeurs_manquantes(dataframe):
   for column_label in column_labels:
     if dataframe[column_label].hasnans:
       print(column_label)
+def extraire_secteur_activite(label):
+    try:
+        secteur_activite = re.sub("\(.*?\)", "",label).split("-")[1].strip()
+        return secteur_activite
+    except Exception as err:
+        logging.warning("Problème avec le libellé " + label + "\n" + err +" \n La valeur a été laissée telle quelle. \n Un traitement manuel de la valeur sera nécessaire.")
+        return label
 
 # Lire les fichier des données des élections 2022 dans les Alpes_Maritimes et la Loire-Atlantique
 #Lire les données des autres élections :
@@ -76,6 +87,12 @@ if valeurs_trimestrielles_series_emploi is not None:
     (donnees_emploi_44_06["2017-T2"].isnull())|
     (donnees_emploi_44_06["2022-T2"].isnull())]
     print(lignes_donnees_manquantes[["idBank", "Dernière mise à jour_x"] + noms_colonnes_interessantes])
+
+    #Extraction du secteur d'activité à partir du Libellé
+    donnees_emploi_44_06.insert(2, 'Secteur', donnees_emploi_44_06["Libellé"].apply(extraire_secteur_activite))
+    #Suppression des colonnes inutiles, qui ne sont pas utiles pour prédire les élections, et des colonnes traîtées devenues inutiles
+    colonnes_inutiles = ["Libellé","Dernière mise à jour_x", "Correction", "Zone géographique","Série arrêtée","Nature","Puissance","Activité","Indicateur","Unité","Périodicité","Dernière mise à jour_y","Dernière mise à jour_y","Période"]
+    donnees_emploi_44_06.drop(colonnes_inutiles, axis=AXE_COLONNES, inplace=True)
     #Export Excel du dataframe
     with pd.ExcelWriter("./data/donnees_emploi_44_06.xlsx",engine="openpyxl",mode='w') as writer:
         donnees_emploi_44_06.to_excel(writer, sheet_name="Emploi_44_06")
