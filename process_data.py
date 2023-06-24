@@ -40,7 +40,7 @@ def extraire_secteur_activite(label):
 #resultats_elections_06_44_2007 = pd.read_excel('Presidentielle_2007_Tour_1.xls', sheet_name="Départements T1")
 resultats_elections_06_44_2022 = pd.read_excel('./data/Donnees_choisies_2022.xlsx')
 # Affiche le dataframe
-print(resultats_elections_06_44_2022)
+#print(resultats_elections_06_44_2022)
 
 # Lire le fichier sécurité
 donnes_securite_dept = pd.read_csv("./data/donnee-securité.csv",
@@ -53,46 +53,19 @@ donnees_securite_2022_44_06 = donnes_securite_dept[(donnes_securite_dept['annee'
 nb_faits_par_departements = donnees_securite_2022_44_06.groupby('Code.département').sum()['faits']
 
 resultats_elections_06_44_2022['faits_de_violence'] = nb_faits_par_departements.values
-print(resultats_elections_06_44_2022)
+#print(resultats_elections_06_44_2022)
 
 # Traite les données sur l'emploi
-indicateurs_serie_emploi = pd.read_csv("./data/caractéristiques.csv", sep=";")
-print(indicateurs_serie_emploi)
-indicateurs_serie_emploi["N° Département"] = indicateurs_serie_emploi["Zone géographique"].apply(
-    separer_numero_departement)
-print(indicateurs_serie_emploi)
-indicateurs_serie_emploi_44_06 = indicateurs_serie_emploi[
-    (indicateurs_serie_emploi['N° Département'] == '44') | (indicateurs_serie_emploi['N° Département'] == '06')]
+#Lit le jeu de données de l'insee au niveau de l'emloi et du chômage
+sheet_names = ['Emploi PL', 'Emploi Indus PL', 'Tertiaire marchand PL', 'Tertiaire non march PL', 'Chom PL', 'Emploi PACA', 'Emploi Indus PACA', 'Tertiaire march PACA', 'Tertiaire non march PACA', 'Chom PACA','Chom_France_hors_Mayotte']
+dict_donnees_insee = pd.read_excel("./data/donnees_insee.xlsx", sheet_name=sheet_names, skiprows=6)
 
-valeurs_trimestrielles_series_emploi = pd.read_csv("./data/valeurs_trimestrielles.csv", sep=";",
-                                                   dtype={'idBank': object})
-if valeurs_trimestrielles_series_emploi is not None:
-    # Sauvegarde des codes statistiques de chaque série
-    codes_stats = valeurs_trimestrielles_series_emploi[valeurs_trimestrielles_series_emploi["Libellé"] == "Codes"]
-    print(codes_stats)
-    # Suppression des lignes avec les codes statistiques
-    valeurs_trimestrielles_series_emploi = valeurs_trimestrielles_series_emploi.drop(codes_stats.index)
-    print(valeurs_trimestrielles_series_emploi)
-    indicateurs_serie_emploi_44_06["idBank"] = indicateurs_serie_emploi_44_06["idBank"].apply(lambda id: id.lstrip('0'))
-    donnees_emploi_44_06 = pd.merge(indicateurs_serie_emploi_44_06, valeurs_trimestrielles_series_emploi, how='inner',
-                                    on="idBank")
-    print("Données emploi mergées : \n", donnees_emploi_44_06)
-    
-    noms_colonnes_interessantes = ["2007-T2","2012-T2","2017-T2","2022-T2"]
-    for nom_colonne in noms_colonnes_interessantes:
-        print(nom_colonne, " ", str((donnees_emploi_44_06[nom_colonne].isna().sum() / len(donnees_emploi_44_06) )* 100), "% de données manquantes")
-    lignes_donnees_manquantes = donnees_emploi_44_06[
-    (donnees_emploi_44_06["2007-T2"].isnull())|
-    (donnees_emploi_44_06["2012-T2"].isnull())|
-    (donnees_emploi_44_06["2017-T2"].isnull())|
-    (donnees_emploi_44_06["2022-T2"].isnull())]
-    print(lignes_donnees_manquantes[["idBank", "Dernière mise à jour_x"] + noms_colonnes_interessantes])
-
-    #Extraction du secteur d'activité à partir du Libellé
-    donnees_emploi_44_06.insert(2, 'Secteur', donnees_emploi_44_06["Libellé"].apply(extraire_secteur_activite))
-    #Suppression des colonnes inutiles, qui ne sont pas utiles pour prédire les élections, et des colonnes traîtées devenues inutiles
-    colonnes_inutiles = ["Libellé","Dernière mise à jour_x", "Correction", "Zone géographique","Série arrêtée","Nature","Puissance","Activité","Indicateur","Unité","Périodicité","Dernière mise à jour_y","Dernière mise à jour_y","Période"]
-    donnees_emploi_44_06.drop(colonnes_inutiles, axis=AXE_COLONNES, inplace=True)
-    #Export Excel du dataframe
-    with pd.ExcelWriter("./data/donnees_emploi_44_06.xlsx",engine="openpyxl",mode='w') as writer:
-        donnees_emploi_44_06.to_excel(writer, sheet_name="Emploi_44_06")
+for item in dict_donnees_insee.items():
+   dataframe = dict_donnees_insee[item[0]]
+   dataframe = dataframe.dropna(axis=0, how="all")
+   dict_donnees_insee[item[0]] = dataframe
+   print(item[0], str(dict_donnees_insee[item[0]].shape))
+dict_donnees_insee["Tertiaire non march PACA"] = dict_donnees_insee["Tertiaire non march PACA"].drop(34, axis=0)
+dataframes = dict_donnees_insee.values()
+dataset_insee = pd.concat(dataframes, axis=0,keys=sheet_names).reset_index(level=1,drop=True)
+print(dataset_insee)
