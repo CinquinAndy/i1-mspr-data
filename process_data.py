@@ -14,12 +14,11 @@ import re
 AXE_COLONNES = 1
 
 def separer_numero_departement(valeur):
-    tableau_composants_valeur = str(valeur).split("-", maxsplit=1)
-    if len(tableau_composants_valeur) < 2:
-        return None
-    else:
-        numero_departement = tableau_composants_valeur[0].strip()
-        return numero_departement
+    valeur_a_comparer = valeur.strip().lower()
+    if valeur_a_comparer == "loire atlantique":
+       return 44
+    elif valeur_a_comparer == "alpes-maritimes":
+       return 6
 def afficher_noms_colonnes_avec_valeurs_manquantes(dataframe):
   column_labels = list(dataframe.columns)
   for column_label in column_labels:
@@ -57,15 +56,19 @@ resultats_elections_06_44_2022['faits_de_violence'] = nb_faits_par_departements.
 
 # Traite les données sur l'emploi
 #Lit le jeu de données de l'insee au niveau de l'emloi et du chômage
-sheet_names = ['Emploi PL', 'Emploi Indus PL', 'Tertiaire marchand PL', 'Tertiaire non march PL', 'Chom PL', 'Emploi PACA', 'Emploi Indus PACA', 'Tertiaire march PACA', 'Tertiaire non march PACA', 'Chom PACA','Chom_France_hors_Mayotte']
+sheet_names = ['Emploi LA', 'Emploi Indus LA', 'Tertiaire marchand LA', 'Tertiaire non march LA', 'Chom LA', 'Emploi AM', 'Emploi Indus AM', 'Tertiaire march AM', 'Tertiaire non march AM OK', 'Chom AM']
 dict_donnees_insee = pd.read_excel("./data/donnees_insee.xlsx", sheet_name=sheet_names, skiprows=6)
+dict_donnees_insee['Tertiaire non march AM OK'] = dict_donnees_insee['Tertiaire non march AM OK'].drop(33, axis=0)
+print(dict_donnees_insee.keys())
 
 for item in dict_donnees_insee.items():
    dataframe = dict_donnees_insee[item[0]]
    dataframe = dataframe.dropna(axis=0, how="all")
+   print(dataframe)
    dict_donnees_insee[item[0]] = dataframe
-   print(item[0], str(dict_donnees_insee[item[0]].shape))
-dict_donnees_insee["Tertiaire non march PACA"] = dict_donnees_insee["Tertiaire non march PACA"].drop(34, axis=0)
+   #print(item[0], str(dict_donnees_insee[item[0]].shape))
 dataframes = dict_donnees_insee.values()
 dataset_insee = pd.concat(dataframes, axis=0,keys=sheet_names).reset_index(level=1,drop=True)
+dataset_insee.insert(0,"N°_Departement",dataset_insee["Zone_geographique"].apply(separer_numero_departement))
+dataset_insee = dataset_insee.drop("Zone_geographique", axis=AXE_COLONNES)
 print(dataset_insee)
