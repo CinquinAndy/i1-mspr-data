@@ -10,6 +10,7 @@ import numpy as np
 import sklearn as sk
 import logging
 import re
+import sqlite3
 #Définition de constantes
 AXE_COLONNES = 1
 
@@ -72,3 +73,6 @@ dataset_insee = pd.concat(dataframes, axis=0,keys=sheet_names).reset_index(level
 dataset_insee.insert(0,"N°_Departement",dataset_insee["Zone_geographique"].apply(separer_numero_departement))
 dataset_insee = dataset_insee.drop("Zone_geographique", axis=AXE_COLONNES)
 print(dataset_insee)
+
+#Insertion des données dans une base de données
+connexion_donnees_emploi = sqlite3.connect("Emploi4406.db")
