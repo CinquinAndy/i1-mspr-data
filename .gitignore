@@ -6,7 +6,6 @@ MSPR_BIG_DATA_JOB_TALEND/code/routines/system/*.*
 MSPR_BIG_DATA_JOB_TALEND/temp/
 MSPR_BIG_DATA_JOB_TALEND/sqlPatterns/
 MSPR_BIG_DATA_JOB_TALEND/talend.project
-
 .idea/
-*.iml
+.ipynb_checkpoints/
 .venv/
