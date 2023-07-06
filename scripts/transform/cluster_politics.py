@@ -8,7 +8,7 @@ def transform():
     df_2022_t1 = extract_2022_t1()
     df_2017_t1 = extract_2017_t1()
 
-    full_df = pd.merge(df_2022_t1, df_2017_t1, on='code_circonscription', how='inner', copy=True)
+    full_df = pd.concat([df_2022_t1, df_2017_t1])
 
     # head
     print(full_df.head())
