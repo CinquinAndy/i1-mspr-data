@@ -5,8 +5,17 @@ def extract_2017_t1():
     # Lire le fichier Excel
     df = pd.read_excel('./data/Presidentielle_2017_Resultats_Tour_1_c.xls', sheet_name='Circo. Leg. Tour 1')
 
-    # Filtrer sur les départements 44 et 6 que nous avons choisis
-    df_filtered = df[(df['Code du département'] == 44) | (df['Code du département'] == 6)]
+    # Convertir la colonne 'Code du département' en chaîne de caractères
+    df['Code du département'] = df['Code du département'].astype(str)
+    print(df['Code du département'].unique())
+
+    # Filtrer les données pour garder uniquement celles relatives à la Loire-Atlantique et aux Alpes-Maritimes
+    dept_codes = ['44', '6']
+    df_filtered = df[df['Code du département'].isin(dept_codes)]
+    print(df_filtered.shape)
+    print(df_filtered.head())
+
+    print(df_filtered.columns.tolist())
 
     return df_filtered
 

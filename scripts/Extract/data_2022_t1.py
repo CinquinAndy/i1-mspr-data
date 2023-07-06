@@ -23,8 +23,6 @@ def extract_2022_t1():
     df_2022_t1 = df_filtered.copy()
     return df_2022_t1
 
-
-
 def save_sql(df):
     # Établir une connexion à la base de données SQLite
     conn = sqlite3.connect('./data_output/bdd_election_2022_t1.db')
