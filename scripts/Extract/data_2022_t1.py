@@ -5,7 +5,7 @@ import sqlite3
 
 
 def extract_2022_t1():
-    results_df = pd.read_csv('../../data/2022_resultats-par-niveau-burvot-t1-france-entiere.csv', sep=';',
+    results_df = pd.read_csv('./data/2022_resultats-par-niveau-burvot-t1-france-entiere.csv', sep=';',
                              encoding='cp1252')
 
     # Convertir la colonne 'Code du département' en chaîne de caractères
@@ -21,7 +21,7 @@ def extract_2022_t1():
     print(df_filtered.columns.tolist())
 
     # Établir une connexion à la base de données SQLite
-    conn = sqlite3.connect('../../data_output/bdd_election_2022_t1.db')
+    conn = sqlite3.connect('./data_output/bdd_election_2022_t1.db')
     cursor = conn.cursor()
 
     # Créer la table pour stocker les données
