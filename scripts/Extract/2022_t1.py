@@ -10,7 +10,7 @@ results_df['Code du département'] = results_df['Code du département'].astype(s
 print(results_df['Code du département'].unique())
 
 # Filtrer les données pour garder uniquement celles relatives à la Loire-Atlantique et aux Alpes-Maritimes
-dept_codes = ['44', '06']
+dept_codes = ['44', '6']
 df_filtered = results_df[results_df['Code du département'].isin(dept_codes)]
 print(df_filtered.shape)
 print(df_filtered.head())
@@ -18,7 +18,7 @@ print(df_filtered.head())
 print(df_filtered.columns.tolist())
 
 # Établir une connexion à la base de données SQLite
-conn = sqlite3.connect('../../bdd_election_2022_t1.db')
+conn = sqlite3.connect('../../data_output/bdd_election_2022_t1.db')
 cursor = conn.cursor()
 
 # Créer la table pour stocker les données
