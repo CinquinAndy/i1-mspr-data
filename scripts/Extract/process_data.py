@@ -32,7 +32,7 @@ donnees_securite_2022_44_06 = donnes_securite_dept[(donnes_securite_dept['annee'
                 donnes_securite_dept['Code.département'] == '44'))]
 
 # Lire le fichier sécurité
-donnes_securite_dept = pd.read_csv("./data/donnee-securité.csv",
+donnes_securite_dept = pd.read_csv("../../data/donnee-securité.csv",
                                    sep=';')
 # Filtrer les données de sécurité sur l'année 2022 et sur les départements 44 et 06
 donnees_securite_2022_44_06 = donnes_securite_dept[(donnes_securite_dept['annee'] == 22) & (
