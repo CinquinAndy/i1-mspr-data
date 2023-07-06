@@ -3,22 +3,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sqlite3
 
-results_df = pd.read_csv('../../data/2022_resultats-par-niveau-burvot-t2-france-entiere.csv', sep=';', encoding='cp1252')
+results_df = pd.read_csv('../../data/2022_resultats-par-niveau-burvot-t2-france-entiere.csv', sep=';',
+                         encoding='cp1252')
 
 # Convertir la colonne 'Code du département' en chaîne de caractères
 results_df['Code du département'] = results_df['Code du département'].astype(str)
-print(results_df['Code du département'].unique())
 
 # Filtrer les données pour garder uniquement celles relatives à la Loire-Atlantique et aux Alpes-Maritimes
-dept_codes = ['44', '06']
+dept_codes = ['44', '6']
 df_filtered = results_df[results_df['Code du département'].isin(dept_codes)]
+print(df_filtered['Code du département'].unique())
 print(df_filtered.shape)
 print(df_filtered.head())
 
 print(df_filtered.columns.tolist())
 
 # Établir une connexion à la base de données SQLite
-conn = sqlite3.connect('../../bdd_election_2022_t2.db')
+conn = sqlite3.connect('../../data_output/bdd_election_2022_t2.db')
 cursor = conn.cursor()
 
 # Créer la table pour stocker les données
