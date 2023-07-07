@@ -7,7 +7,8 @@
 
 import pandas as pd
 import numpy as np
-import sklearn as sk
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 import logging
 import re
 import sqlite3
@@ -74,5 +75,25 @@ dataset_insee.insert(0,"N°_Departement",dataset_insee["Zone_geographique"].appl
 dataset_insee = dataset_insee.drop("Zone_geographique", axis=AXE_COLONNES)
 print(dataset_insee)
 
+#Affichage des noms de colonnes ayant des valeurs manquantes
+
+print(afficher_noms_colonnes_avec_valeurs_manquantes(dataset_insee))
+nan_values_dataframe = dataset_insee.isna()
+missing_values_row_indexes = nan_values_dataframe[(nan_values_dataframe["2022T1"] == True)|(nan_values_dataframe["2022T2"] == True)|(nan_values_dataframe["2022T3"].isnull().any() == True)|(nan_values_dataframe["2022T4"] == True)].index
+missing_values_row_indexes
+rows_w_missing_values = dataset_insee.loc[missing_values_row_indexes]
+# Régression linéaire sur les données manquantes
+previous_data_slice = slice(1,82)
+target_slice = slice(82, None)
+
+x = list(rows_w_missing_values.columns)[previous_data_slice]
+y = rows_w_missing_values.iloc[2:82]
+regression_model = LinearRegression()
+# Adapter les données (entraînement du modèle)
+regression_model.fit([x], y)
+# Prédiction
+y_predicted = regression_model.predict(x)
+r2 = r2_score(y, y_predicted)
+print(r2)
 #Insertion des données dans une base de données
 connexion_donnees_emploi = sqlite3.connect("Emploi4406.db")
