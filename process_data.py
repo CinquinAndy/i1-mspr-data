@@ -7,7 +7,9 @@
 
 import pandas as pd
 import numpy as np
+import math
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 import logging
 import re
@@ -82,18 +84,29 @@ nan_values_dataframe = dataset_insee.isna()
 missing_values_row_indexes = nan_values_dataframe[(nan_values_dataframe["2022T1"] == True)|(nan_values_dataframe["2022T2"] == True)|(nan_values_dataframe["2022T3"].isnull().any() == True)|(nan_values_dataframe["2022T4"] == True)].index
 missing_values_row_indexes
 rows_w_missing_values = dataset_insee.loc[missing_values_row_indexes]
+rows_w_missing_values.columns = range(rows_w_missing_values.columns.size)
+predicted_y_values_dict = {}
 # Régression linéaire sur les données manquantes
 previous_data_slice = slice(1,82)
 target_slice = slice(82, None)
-
-x = list(rows_w_missing_values.columns)[previous_data_slice]
-y = rows_w_missing_values.iloc[2:82]
-regression_model = LinearRegression()
-# Adapter les données (entraînement du modèle)
-regression_model.fit([x], y)
-# Prédiction
-y_predicted = regression_model.predict(x)
-r2 = r2_score(y, y_predicted)
-print(r2)
+#Plaçage des features et des labels dans des tableaux à une dimension, Travail avec les données emploi Indus LA
+x = rows_w_missing_values.columns[previous_data_slice].to_numpy().reshape(-1,1)
+for i in range(len(rows_w_missing_values)):
+    current_series_name = rows_w_missing_values.index[i]
+    y = rows_w_missing_values.iloc[i,previous_data_slice].to_numpy().reshape(-1,1)
+    #Découpage des données en jeux d'entraînement et de test
+    #splitted_datasets_tuple = train_test_split(x, y, test_size=0.2, train_size=0.8)
+    #Préparation des données à la régression linéaire
+    #X_train, X_test, y_train, y_test = map(lambda dataset : dataset.reshape(1,dataset.shape[0]), splitted_datasets_tuple)
+    
+    regression_model = LinearRegression()
+    # Adapter les données (entraînement du modèle)
+    regression_model.fit(x,y)
+    # Prédiction
+    y_predicted = regression_model.predict(x)
+    predicted_y_values_dict[current_series_name] = y_predicted
+    r2 = r2_score(y, y_predicted)
+    corr_coef = math.sqrt(r2)
+    print(corr_coef)
 #Insertion des données dans une base de données
 connexion_donnees_emploi = sqlite3.connect("Emploi4406.db")
