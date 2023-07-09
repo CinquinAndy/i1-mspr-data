@@ -8,3 +8,5 @@ class RegressorWrapper :
         return self.y - self.y_predicted
     def get_linear_equation(self):
         return "y =" + str(self.model.coef_[0][0]) + "x + " + str(self.model.intercept_[0])
+    def predict(self,x):
+        return self.model.predict(x)
