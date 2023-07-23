@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.record="http:///orgomg/cwm/resource/record.ecore">
+  <TalendMetadata:DelimitedFileConnection xmi:id="_lL4LUAqdEe6TiP9Cruyqkg" name="FichieremploisINSEECaracteristiquesserie" dataPackage="_lL4yYAqdEe6TiP9Cruyqkg" Server="Localhost 127.0.0.1" FilePath="D:/Alexandre/Nextcloud/Etudes/EPSI/MSPR_Big_Data/caractéristiques.csv" Encoding="UTF-8" FieldSeparatorValue="&quot;;&quot;" RowSeparatorValue="&quot;\n&quot;" UseHeader="true" HeaderValue="1" FirstLineCaption="true"/>
+  <orgomg.cwm.resource.record:RecordFile xmi:id="_lL4yYAqdEe6TiP9Cruyqkg" name="default" dataManager="_lL4LUAqdEe6TiP9Cruyqkg">
+    <ownedElement xsi:type="TalendMetadata:MetadataTable" xmi:id="_lL4yYQqdEe6TiP9Cruyqkg" id="_HEAOQAqcEe6TiP9Cruyqkg" label="Emploi_caracteristiques_serie">
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZcAqdEe6TiP9Cruyqkg" label="_idBank" length="11" talendType="id_String" key="true" nullable="false" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZcQqdEe6TiP9Cruyqkg" label="_Derniere_mise_a_jour" length="-1" talendType="id_String" pattern="&quot;dd/MM/yyyy HH:mm&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZcgqdEe6TiP9Cruyqkg" label="_Correction" length="39" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZcwqdEe6TiP9Cruyqkg" label="_Zone_geographique" length="30" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZdAqdEe6TiP9Cruyqkg" label="_Serie_arretee" length="5" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZdQqdEe6TiP9Cruyqkg" label="_Nature" length="16" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZdgqdEe6TiP9Cruyqkg" label="_Puissance" length="-1" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZdwqdEe6TiP9Cruyqkg" label="_Activite" length="19" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZeAqdEe6TiP9Cruyqkg" label="_Indicateur" length="44" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZeQqdEe6TiP9Cruyqkg" label="_Unite" length="37" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZegqdEe6TiP9Cruyqkg" label="_Periodicite" length="11" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_lL5ZewqdEe6TiP9Cruyqkg" label="Column11" length="15" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+    </ownedElement>
+  </orgomg.cwm.resource.record:RecordFile>
+</xmi:XMI>

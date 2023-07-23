@@ -1,0 +1,24 @@
+[ {
+  "baseItem" : {
+    "id" : "_tiGNEP1wEe2BJu_SP3z_IQ",
+    "version" : "0.1",
+    "type" : "job"
+  },
+  "relatedItems" : [ {
+    "id" : "_9zUJMAqfEe6TiP9Cruyqkg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_lIwl4AqdEe6TiP9Cruyqkg",
+    "version" : "Latest",
+    "type" : "property"
+  }, {
+    "id" : "_9zUJMAqfEe6TiP9Cruyqkg - Fichier_emplois_INSEE_Valeurs_Trimestrielles",
+    "version" : "Latest",
+    "type" : "schema"
+  }, {
+    "id" : "_lIwl4AqdEe6TiP9Cruyqkg - Emploi_caracteristiques_serie",
+    "version" : "Latest",
+    "type" : "schema"
+  } ]
+} ]
