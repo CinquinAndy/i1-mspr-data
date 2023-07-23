@@ -2,10 +2,10 @@
 .JETEmitters/
 .Java/
 .metadata/
-MSPR_BIG_DATA_JOB_TALEND/code/routines/system/*.*
-MSPR_BIG_DATA_JOB_TALEND/temp/
-MSPR_BIG_DATA_JOB_TALEND/sqlPatterns/
-MSPR_BIG_DATA_JOB_TALEND/talend.project
+MSPR_BIG_DATA/code/routines/system/*.*
+MSPR_BIG_DATA/temp/
+MSPR_BIG_DATA/sqlPatterns/
+MSPR_BIG_DATA/talend.project
 .idea/
 .ipynb_checkpoints/
 .venv/
